@@ -60,7 +60,6 @@ namespace ProgramsTxtMaker
                 //textBox2.Text += d + "\r\n";
                 if (checkBox2.Checked)
                 {
-                    //MessageBox.Show(Path.GetDirectoryName(d) + "\\" + sn.ToString());
                     try
                     {
                         Directory.Move(Path.GetFullPath(d), Path.GetDirectoryName(d) + "\\" + sn.ToString());
@@ -93,7 +92,7 @@ namespace ProgramsTxtMaker
                         
                         sn++;
                         g = h + Path.DirectorySeparatorChar + sn.ToString() + ".EXE";
-                        //MessageBox.Show(g);
+                        
                         File.Move(Path.GetFullPath(f), g);
 
                     }

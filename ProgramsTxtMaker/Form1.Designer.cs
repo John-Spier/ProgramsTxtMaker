@@ -52,7 +52,7 @@ namespace ProgramsTxtMaker
             // 
             this.textBox1.Font = new System.Drawing.Font("Prestige Elite Std", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.textBox1.ForeColor = System.Drawing.Color.Red;
-            this.textBox1.Location = new System.Drawing.Point(179, 409);
+            this.textBox1.Location = new System.Drawing.Point(177, 419);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(319, 30);
             this.textBox1.TabIndex = 0;
@@ -72,9 +72,9 @@ namespace ProgramsTxtMaker
             // 
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button1.Font = new System.Drawing.Font("Trajan Pro", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button1.Location = new System.Drawing.Point(506, 405);
+            this.button1.Location = new System.Drawing.Point(502, 413);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(153, 39);
+            this.button1.Size = new System.Drawing.Size(153, 36);
             this.button1.TabIndex = 2;
             this.button1.Text = "Browse";
             this.button1.UseVisualStyleBackColor = true;
@@ -86,7 +86,7 @@ namespace ProgramsTxtMaker
             this.button2.Font = new System.Drawing.Font("Charlemagne Std", 48F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
             this.button2.Location = new System.Drawing.Point(179, 307);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(482, 87);
+            this.button2.Size = new System.Drawing.Size(482, 100);
             this.button2.TabIndex = 3;
             this.button2.Text = "GO";
             this.button2.UseMnemonic = false;
