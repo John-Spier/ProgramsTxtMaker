@@ -123,7 +123,7 @@ namespace ProgramsTxtMaker
                 }
             }
             textBox2.Text += "\"END\"";
-            writer.WriteLine("\"END\"");
+            writer.Write("\"END\"");
             writer.Flush();
             writer.Close();
             psf.Flush();
