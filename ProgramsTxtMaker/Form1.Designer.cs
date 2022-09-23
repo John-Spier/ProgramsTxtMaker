@@ -43,6 +43,7 @@ namespace ProgramsTxtMaker
             this.label2 = new System.Windows.Forms.Label();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -52,7 +53,7 @@ namespace ProgramsTxtMaker
             // 
             this.textBox1.Font = new System.Drawing.Font("Prestige Elite Std", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.textBox1.ForeColor = System.Drawing.Color.Red;
-            this.textBox1.Location = new System.Drawing.Point(177, 419);
+            this.textBox1.Location = new System.Drawing.Point(177, 414);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(319, 30);
             this.textBox1.TabIndex = 0;
@@ -72,9 +73,9 @@ namespace ProgramsTxtMaker
             // 
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button1.Font = new System.Drawing.Font("Trajan Pro", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button1.Location = new System.Drawing.Point(502, 413);
+            this.button1.Location = new System.Drawing.Point(502, 408);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(153, 36);
+            this.button1.Size = new System.Drawing.Size(159, 36);
             this.button1.TabIndex = 2;
             this.button1.Text = "Browse";
             this.button1.UseVisualStyleBackColor = true;
@@ -102,7 +103,7 @@ namespace ProgramsTxtMaker
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox2.Size = new System.Drawing.Size(647, 291);
+            this.textBox2.Size = new System.Drawing.Size(325, 291);
             this.textBox2.TabIndex = 4;
             // 
             // checkBox1
@@ -191,12 +192,25 @@ namespace ProgramsTxtMaker
             0,
             0});
             // 
+            // textBox3
+            // 
+            this.textBox3.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point);
+            this.textBox3.ForeColor = System.Drawing.Color.Blue;
+            this.textBox3.Location = new System.Drawing.Point(345, 12);
+            this.textBox3.MaxLength = 1000000;
+            this.textBox3.Multiline = true;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox3.Size = new System.Drawing.Size(325, 291);
+            this.textBox3.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(673, 450);
+            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.label2);
@@ -240,6 +254,7 @@ namespace ProgramsTxtMaker
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
 

@@ -54,6 +54,7 @@ namespace ProgramsTxtMaker
                 
             }
             StreamWriter writer = File.CreateText(progfile);
+            StreamWriter psf = File.CreateText(tbone + Path.DirectorySeparatorChar + "TITLES.TXT");
             writer.WriteLine("START");
             foreach (string d in Directory.GetDirectories(tbone, "*", SearchOption.TopDirectoryOnly)) //can't rename inner directories
             {
@@ -113,6 +114,8 @@ namespace ProgramsTxtMaker
                     //MessageBox.Show(cdromdir);
                     textBox2.Text += '"' + oldfn.Substring(Math.Min((int)numericUpDown1.Value, oldfn.Length), Math.Min(((int)numericUpDown2.Value) - (int)numericUpDown1.Value, oldfn.Length - (int)numericUpDown1.Value)) + "\"cdrom:" + cdromdir + ";1\"\r\n";
                     writer.WriteLine('"' + oldfn.Substring(Math.Min((int)numericUpDown1.Value, oldfn.Length), Math.Min(((int)numericUpDown2.Value) - (int)numericUpDown1.Value, oldfn.Length - (int)numericUpDown1.Value)) + "\"cdrom:" + cdromdir + ";1\"");
+                    textBox3.Text += '"' + oldfn.Substring(Math.Min((int)numericUpDown1.Value, oldfn.Length), Math.Min(63 - (int)numericUpDown1.Value, oldfn.Length - (int)numericUpDown1.Value)) + "\" \"" + cdromdir + "\" \"801FFF0\"\r\n";
+                    psf.WriteLine('"' + oldfn.Substring(Math.Min((int)numericUpDown1.Value, oldfn.Length), Math.Min(63 - (int)numericUpDown1.Value, oldfn.Length - (int)numericUpDown1.Value)) + "\" \"" + cdromdir + "\" \"801FFF0\"");
                 }
                 catch (Exception fx)
                 {
@@ -123,6 +126,10 @@ namespace ProgramsTxtMaker
             writer.WriteLine("\"END\"");
             writer.Flush();
             writer.Close();
+            psf.Flush();
+            psf.BaseStream.WriteByte(0x80);
+            psf.Close();
+            textBox3.Text += '€';
         }
 
         private void label1_Click(object sender, EventArgs e)
