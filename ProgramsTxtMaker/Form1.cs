@@ -34,6 +34,70 @@ namespace ProgramsTxtMaker
             
         }
 
+        private int AddFiles(string ext, string stack, StreamWriter writer, StreamWriter psf, string tbone, int sn)
+        {
+            int dn = 0;
+            string oldfn;
+            string cdromdir;
+            string g;
+            foreach (string f in Directory.GetFiles(tbone, "*" + ext, SearchOption.AllDirectories))
+            {
+                try
+                {
+                    oldfn = Path.GetFileNameWithoutExtension(f);
+                    if (checkBox3.Checked)
+                    {
+                        if (sn % ((int)numericUpDown3.Value) == 0)
+                        {
+                            dn++;
+                        }
+
+                        string h = Path.GetDirectoryName(f) + Path.DirectorySeparatorChar + dn.ToString();
+                        if (!Directory.Exists(h))
+                        {
+                            Directory.CreateDirectory(h);
+                        }
+
+                        sn++;
+                        g = h + Path.DirectorySeparatorChar + sn.ToString() + ext;
+
+                        File.Move(Path.GetFullPath(f), g);
+
+                    }
+                    else if (checkBox1.Checked && oldfn.Length > 8)
+                    {
+                        g = Path.GetDirectoryName(f) + Path.DirectorySeparatorChar + sn.ToString() + ext;
+                        sn++;
+                        File.Move(Path.GetFullPath(f), g);
+                    }
+
+                    else
+                    {
+                        g = Path.GetFullPath(f);
+                    }
+
+                    cdromdir = g.Substring(Path.GetFullPath(tbone).Length);
+                    //MessageBox.Show('"' + oldfn.Substring(0, Math.Min(23, oldfn.Length)) + "\"cdrom:" + cdromdir + ";1\"");
+                    //MessageBox.Show(cdromdir);
+                    if (writer != null)
+                    {
+                        textBox2.Text += '"' + oldfn.Substring(0, Math.Min(23, oldfn.Length)) + "\"cdrom:" + cdromdir + ";1\"\r\n";
+                        writer.WriteLine('"' + oldfn.Substring(0, Math.Min(23, oldfn.Length)) + "\"cdrom:" + cdromdir + ";1\"");
+                    }
+                    if (psf != null)
+                    {
+                        textBox3.Text += '"' + oldfn.Substring(0, Math.Min(63, oldfn.Length)) + "\" \"" + cdromdir + stack + "\r\n";
+                        psf.WriteLine('"' + oldfn.Substring(0, Math.Min(63, oldfn.Length)) + "\" \"" + cdromdir + stack);
+                    }
+                }
+                catch (Exception fx)
+                {
+                    this.Text = "File Error: " + fx.Message;
+                }
+            }
+            return sn;
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             //textBox2.Clear();
@@ -42,10 +106,7 @@ namespace ProgramsTxtMaker
             tbone = tbone.Trim();
             tbone = tbone.TrimEnd('\\');
             int sn = 1;
-            int dn = 0;
-            string oldfn;
-            string cdromdir;
-            string g;
+
             string progfile = tbone + Path.DirectorySeparatorChar + "PROGRAMS.TXT";
             if (checkBox3.Checked) { checkBox1.Checked = true; }
             if (File.Exists(progfile))
@@ -59,7 +120,7 @@ namespace ProgramsTxtMaker
             foreach (string d in Directory.GetDirectories(tbone, "*", SearchOption.TopDirectoryOnly)) //can't rename inner directories
             {
                 //textBox2.Text += d + "\r\n";
-                if (checkBox2.Checked)
+                if (checkBox2.Checked && Path.GetFileName(d).Length > 8)
                 {
                     try
                     {
@@ -73,55 +134,12 @@ namespace ProgramsTxtMaker
                 }
 
             }
-            foreach (string f in Directory.GetFiles(tbone, @"*.exe", SearchOption.AllDirectories))
+            sn = AddFiles(".EXE", "\" \"801FFFF0\"", writer, psf, tbone, sn);
+            if (checkBox4.Checked)
             {
-                try
-                {
-                    oldfn = Path.GetFileNameWithoutExtension(f);
-                    if (checkBox3.Checked)
-                    {
-                        if (sn % ((int)numericUpDown3.Value)==0)
-                        {
-                            dn++;
-                        }
-
-                        string h = Path.GetDirectoryName(f) + Path.DirectorySeparatorChar + dn.ToString();
-                        if (!Directory.Exists(h))
-                        {
-                            Directory.CreateDirectory(h);
-                        }
-                        
-                        sn++;
-                        g = h + Path.DirectorySeparatorChar + sn.ToString() + ".EXE";
-                        
-                        File.Move(Path.GetFullPath(f), g);
-
-                    }
-                    else if (checkBox1.Checked)
-                    {
-                        g = Path.GetDirectoryName(f) + Path.DirectorySeparatorChar + sn.ToString() + ".EXE";
-                        sn++;
-                        //MessageBox.Show(g);
-                        File.Move(Path.GetFullPath(f), g);
-                    } 
-                    
-                    else
-                    {
-                        g = Path.GetFullPath(f);
-                    }
-                    
-                    cdromdir = g.Substring(Path.GetFullPath(tbone).Length);
-                    //MessageBox.Show(cdromdir);
-                    textBox2.Text += '"' + oldfn.Substring(Math.Min((int)numericUpDown1.Value, oldfn.Length), Math.Min(((int)numericUpDown2.Value) - (int)numericUpDown1.Value, oldfn.Length - (int)numericUpDown1.Value)) + "\"cdrom:" + cdromdir + ";1\"\r\n";
-                    writer.WriteLine('"' + oldfn.Substring(Math.Min((int)numericUpDown1.Value, oldfn.Length), Math.Min(((int)numericUpDown2.Value) - (int)numericUpDown1.Value, oldfn.Length - (int)numericUpDown1.Value)) + "\"cdrom:" + cdromdir + ";1\"");
-                    textBox3.Text += '"' + oldfn.Substring(Math.Min((int)numericUpDown1.Value, oldfn.Length), Math.Min(63 - (int)numericUpDown1.Value, oldfn.Length - (int)numericUpDown1.Value)) + "\" \"" + cdromdir + "\" \"801FFF0\"\r\n";
-                    psf.WriteLine('"' + oldfn.Substring(Math.Min((int)numericUpDown1.Value, oldfn.Length), Math.Min(63 - (int)numericUpDown1.Value, oldfn.Length - (int)numericUpDown1.Value)) + "\" \"" + cdromdir + "\" \"801FFF0\"");
-                }
-                catch (Exception fx)
-                {
-                    this.Text = "File Error: " + fx.Message;
-                }
+                sn = AddFiles(".VFS", "\" \"801FFFF0\"", null, psf, tbone, sn);
             }
+            
             textBox2.Text += "\"END\"";
             writer.Write("\"END\"");
             writer.Flush();
@@ -150,11 +168,11 @@ namespace ProgramsTxtMaker
             button1.Visible = !button1.Visible;
             button2.Visible = !button2.Visible;
             label1.Visible = !label1.Visible;
-            label2.Visible = !label2.Visible;
+            //label2.Visible = !label2.Visible;
             checkBox1.Visible = !checkBox1.Visible;
             checkBox2.Visible = !checkBox2.Visible;
-            numericUpDown1.Visible = !numericUpDown1.Visible;
-            numericUpDown2.Visible = !numericUpDown2.Visible;
+            //numericUpDown1.Visible = !numericUpDown1.Visible;
+            //numericUpDown2.Visible = !numericUpDown2.Visible;
             checkBox3.Visible = !checkBox3.Visible;
             numericUpDown3.Visible = !numericUpDown3.Visible;
         }
