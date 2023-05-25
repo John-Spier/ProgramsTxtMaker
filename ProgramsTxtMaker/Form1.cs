@@ -100,7 +100,7 @@ namespace ProgramsTxtMaker
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //textBox2.Clear();
+            textBox3.Clear();
             textBox2.Text = "START\r\n";
             string tbone = textBox1.Text;
             tbone = tbone.Trim();
@@ -109,11 +109,13 @@ namespace ProgramsTxtMaker
 
             string progfile = tbone + Path.DirectorySeparatorChar + "PROGRAMS.TXT";
             if (checkBox3.Checked) { checkBox1.Checked = true; }
+            /*
             if (File.Exists(progfile))
             {
-                //File.Move(progfile, tbone + Path.DirectorySeparatorChar + sn.ToString() + ".BAK");
+                File.Move(progfile, tbone + Path.DirectorySeparatorChar + sn.ToString() + ".BAK");
                 
             }
+            */
             StreamWriter writer = File.CreateText(progfile);
             StreamWriter psf = File.CreateText(tbone + Path.DirectorySeparatorChar + "TITLES.TXT");
             writer.WriteLine("START");
@@ -137,7 +139,7 @@ namespace ProgramsTxtMaker
             sn = AddFiles(".EXE", "\" \"801FFFF0\"", writer, psf, tbone, sn);
             if (checkBox4.Checked)
             {
-                sn = AddFiles(".VFS", "\" \"801FFFF0\"", null, psf, tbone, sn);
+                sn = AddFiles(".VFS", "\" \"FFFFFFFE\"", null, psf, tbone, sn);
             }
             
             textBox2.Text += "\"END\"";
@@ -175,6 +177,8 @@ namespace ProgramsTxtMaker
             //numericUpDown2.Visible = !numericUpDown2.Visible;
             checkBox3.Visible = !checkBox3.Visible;
             numericUpDown3.Visible = !numericUpDown3.Visible;
+            checkBox4.Visible = !checkBox4.Visible;
+            textBox3.Visible = !textBox3.Visible;
         }
 
         private void label2_Click(object sender, EventArgs e)

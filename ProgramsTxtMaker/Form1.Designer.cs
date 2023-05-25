@@ -120,8 +120,6 @@ namespace ProgramsTxtMaker
             // 
             this.checkBox2.AutoSize = true;
             this.checkBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox2.ForeColor = System.Drawing.Color.OrangeRed;
             this.checkBox2.Location = new System.Drawing.Point(12, 350);
             this.checkBox2.Name = "checkBox2";
@@ -171,6 +169,8 @@ namespace ProgramsTxtMaker
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
+            this.checkBox4.Checked = true;
+            this.checkBox4.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox4.Font = new System.Drawing.Font("Adobe Garamond Pro Bold", 9.749999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.checkBox4.ForeColor = System.Drawing.Color.SteelBlue;
             this.checkBox4.Location = new System.Drawing.Point(12, 325);
