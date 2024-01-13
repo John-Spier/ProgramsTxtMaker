@@ -76,7 +76,7 @@ namespace ProgramsTxtMaker
                         g = Path.GetFullPath(f);
                     }
 
-                    cdromdir = g.Substring(Path.GetFullPath(tbone).Length);
+                    cdromdir = g.Substring(Path.GetFullPath(tbone).Length).ToUpperInvariant();
                     //MessageBox.Show('"' + oldfn.Substring(0, Math.Min(23, oldfn.Length)) + "\"cdrom:" + cdromdir + ";1\"");
                     //MessageBox.Show(cdromdir);
                     if (writer != null)
