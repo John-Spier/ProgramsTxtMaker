@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.Runtime.InteropServices;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace ProgramsTxtMaker
 {
-    public partial class Form1 : Form
+	public partial class Form1 : Form
     {
 
 
@@ -33,6 +25,42 @@ namespace ProgramsTxtMaker
             }
             
         }
+
+        private bool IsoName(string filename) //this does not allow _ even though iso9660 allows it to save time
+        {
+            try
+            {
+                string oldfn = Path.GetFileNameWithoutExtension(filename);
+                string oldext = Path.GetExtension(filename).Substring(1);
+                if (!filename.All(char.IsAscii))
+                {
+                    return false;
+                }
+                if (filename.IndexOfAny(Path.GetInvalidFileNameChars()) > -1)
+                {
+                    return false;
+                }
+                // ascii is already checked for and this avoids the . problem
+                if (!oldext.All(char.IsLetterOrDigit))
+                {
+                    return false;
+                }
+                if (!oldfn.All(char.IsLetterOrDigit))
+                {
+                    return false;
+                }
+                if (oldext.Length > 3)
+                {
+                    return false;
+                }
+                if (oldfn.Length > 8)
+                {
+                    return false;
+                }
+                return true;
+            }
+            catch { return false; }
+		}
 
         private int AddFiles(string ext, string stack, StreamWriter writer, StreamWriter psf, string tbone, int sn)
         {
@@ -64,7 +92,8 @@ namespace ProgramsTxtMaker
                         File.Move(Path.GetFullPath(f), g);
 
                     }
-                    else if (checkBox1.Checked && oldfn.Length > 8)
+
+                    else if (checkBox1.Checked && !IsoName(f))
                     {
                         g = Path.GetDirectoryName(f) + Path.DirectorySeparatorChar + sn.ToString() + ext;
                         sn++;
@@ -155,6 +184,7 @@ namespace ProgramsTxtMaker
         private void label1_Click(object sender, EventArgs e)
         {
             this.BackgroundImageLayout = ImageLayout.Center;
+            //MessageBox.Show(textBox1.Text, IsoName(textBox1.Text).ToString());
         }
 
         private void Form1_Load(object sender, EventArgs e)
