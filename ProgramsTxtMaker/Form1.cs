@@ -93,7 +93,7 @@ namespace ProgramsTxtMaker
 
                     }
 
-                    else if (checkBox1.Checked && !IsoName(f))
+                    else if (checkBox1.Checked && !IsoName(Path.GetFileName(f)))
                     {
                         g = Path.GetDirectoryName(f) + Path.DirectorySeparatorChar + sn.ToString() + ext;
                         sn++;
