@@ -62,13 +62,37 @@ namespace ProgramsTxtMaker
             catch { return false; }
 		}
 
+        private bool IsoDir(string filename)
+        {
+            try
+            {
+				if (!filename.All(char.IsAscii))
+				{
+					return false;
+				}
+				if (filename.IndexOfAny(Path.GetInvalidFileNameChars()) > -1)
+				{
+					return false;
+				}
+				if (!filename.All(char.IsLetterOrDigit))
+				{
+					return false;
+				}
+				if (filename.Length > 8)
+				{
+					return false;
+				}
+				return true;
+            } catch { return false; }
+        }
+
         private int AddFiles(string ext, string stack, StreamWriter writer, StreamWriter psf, string tbone, int sn)
         {
             int dn = 0;
             string oldfn;
             string cdromdir;
             string g;
-            foreach (string f in Directory.GetFiles(tbone, "*" + ext, SearchOption.AllDirectories))
+            foreach (string f in Directory.GetFiles(tbone, "*" + ext, SearchOption.AllDirectories).OrderBy(x => x))
             {
                 try
                 {
@@ -148,22 +172,25 @@ namespace ProgramsTxtMaker
             StreamWriter writer = File.CreateText(progfile);
             StreamWriter psf = File.CreateText(tbone + Path.DirectorySeparatorChar + "TITLES.TXT");
             writer.WriteLine("START");
-            foreach (string d in Directory.GetDirectories(tbone, "*", SearchOption.TopDirectoryOnly)) //can't rename inner directories
+            if (checkBox2.Checked)
             {
-                //textBox2.Text += d + "\r\n";
-                if (checkBox2.Checked && Path.GetFileName(d).Length > 8)
+                foreach (string d in Directory.GetDirectories(tbone, "*", SearchOption.TopDirectoryOnly).OrderBy(x => x)) //can't rename inner directories
                 {
-                    try
+                    //textBox2.Text += d + "\r\n";
+                    if (IsoDir(Path.GetFileName(d)))
                     {
-                        Directory.Move(Path.GetFullPath(d), Path.GetDirectoryName(d) + "\\" + sn.ToString());
-                    } 
-                    catch (Exception dx)
-                    {
-                        this.Text = "Directory Error: " + dx.Message;
+                        try
+                        {
+                            Directory.Move(Path.GetFullPath(d), Path.GetDirectoryName(d) + "\\" + sn.ToString());
+                        }
+                        catch (Exception dx)
+                        {
+                            this.Text = "Directory Error: " + dx.Message;
+                        }
+                        sn++;
                     }
-                    sn++;
-                }
 
+                }
             }
             sn = AddFiles(".EXE", "\" \"801FFFF0\"", writer, psf, tbone, sn);
             if (checkBox4.Checked)
