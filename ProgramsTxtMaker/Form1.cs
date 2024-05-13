@@ -177,7 +177,7 @@ namespace ProgramsTxtMaker
                 foreach (string d in Directory.GetDirectories(tbone, "*", SearchOption.TopDirectoryOnly).OrderBy(x => x)) //can't rename inner directories
                 {
                     //textBox2.Text += d + "\r\n";
-                    if (IsoDir(Path.GetFileName(d)))
+                    if (!IsoDir(Path.GetFileName(d)))
                     {
                         try
                         {
