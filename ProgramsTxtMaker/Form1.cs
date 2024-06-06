@@ -26,11 +26,11 @@ namespace ProgramsTxtMaker
             
         }
 
-        private bool IsoName(string filename) //this does not allow _ even though iso9660 allows it to save time
+        private bool IsoName(string filename)
         {
             try
             {
-                string oldfn = Path.GetFileNameWithoutExtension(filename);
+                string oldfn = Path.GetFileNameWithoutExtension(filename).Replace('_', 'A');
                 string oldext = Path.GetExtension(filename).Substring(1);
                 if (!filename.All(char.IsAscii))
                 {
@@ -177,7 +177,7 @@ namespace ProgramsTxtMaker
                 foreach (string d in Directory.GetDirectories(tbone, "*", SearchOption.TopDirectoryOnly).OrderBy(x => x)) //can't rename inner directories
                 {
                     //textBox2.Text += d + "\r\n";
-                    if (!IsoDir(Path.GetFileName(d)))
+                    if (!IsoDir(Path.GetFileName(d).Replace('_', 'A')))
                     {
                         try
                         {
