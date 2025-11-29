@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -26,7 +27,7 @@ namespace ProgramsTxtMaker
             
         }
 
-        private bool IsoName(string filename)
+        private static bool IsoName(string filename)
         {
             try
             {
@@ -62,7 +63,7 @@ namespace ProgramsTxtMaker
             catch { return false; }
 		}
 
-        private bool IsoDir(string filename)
+        private static bool IsoDir(string filename)
         {
             try
             {
@@ -89,15 +90,31 @@ namespace ProgramsTxtMaker
         private int AddFiles(string ext, string stack, StreamWriter writer, StreamWriter psf, string tbone, int sn)
         {
             int dn = 0;
+            int fsn = 0;
+            int dir;
             string oldfn;
             string cdromdir;
             string g;
+            Dictionary<string, int> dirsizes = new();
+
             foreach (string f in Directory.GetFiles(tbone, "*" + ext, SearchOption.AllDirectories).OrderBy(x => x))
             {
+                if (!dirsizes.TryGetValue(Path.GetDirectoryName(f), out dir))
+                {
+                    if (dirsizes.TryAdd(Path.GetDirectoryName(f), Directory.EnumerateFileSystemEntries(Path.GetDirectoryName(f)).Count()))
+                    {
+                        dir = dirsizes[Path.GetDirectoryName(f)];
+                    }
+                    else
+                    {
+                        this.Text = "Could not find amount of files in " + Path.GetDirectoryName(f);
+						dir = (int)numericUpDown3.Value + 1;
+                    }
+                }
                 try
                 {
                     oldfn = Path.GetFileNameWithoutExtension(f);
-                    if (checkBox3.Checked)
+                    if (checkBox3.Checked && dir > numericUpDown3.Value)
                     {
                         if (sn % ((int)numericUpDown3.Value) == 0)
                         {
@@ -111,8 +128,15 @@ namespace ProgramsTxtMaker
                         }
 
                         sn++;
-                        g = h + Path.DirectorySeparatorChar + sn.ToString() + ext;
-
+                        if (IsoName(Path.GetFileName(f).Replace('_', 'A')))
+                        {
+                            g = g = h + Path.DirectorySeparatorChar + Path.GetFileName(f);
+						}
+                        else
+                        {
+                            fsn++;
+                            g = h + Path.DirectorySeparatorChar + fsn.ToString() + ext;
+                        }
                         File.Move(Path.GetFullPath(f), g);
 
                     }
@@ -129,7 +153,7 @@ namespace ProgramsTxtMaker
                         g = Path.GetFullPath(f);
                     }
 
-                    cdromdir = g.Substring(Path.GetFullPath(tbone).Length).ToUpperInvariant();
+                    cdromdir = g[Path.GetFullPath(tbone).Length..].ToUpperInvariant();
                     //MessageBox.Show('"' + oldfn.Substring(0, Math.Min(23, oldfn.Length)) + "\"cdrom:" + cdromdir + ";1\"");
                     //MessageBox.Show(cdromdir);
                     if (writer != null)
