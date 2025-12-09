@@ -63,7 +63,7 @@ namespace ProgramsTxtMaker
             this.label1.Size = new System.Drawing.Size(159, 22);
             this.label1.TabIndex = 1;
             this.label1.Text = "Disc Root Dir.";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.label1.Click += new System.EventHandler(this.Label1_Click);
             // 
             // button1
             // 
@@ -75,7 +75,7 @@ namespace ProgramsTxtMaker
             this.button1.TabIndex = 2;
             this.button1.Text = "Browse";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // button2
             // 
@@ -88,7 +88,7 @@ namespace ProgramsTxtMaker
             this.button2.Text = "GO";
             this.button2.UseMnemonic = false;
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // textBox2
             // 

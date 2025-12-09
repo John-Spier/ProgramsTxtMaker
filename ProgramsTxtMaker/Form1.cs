@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows.Forms;
 
 namespace ProgramsTxtMaker
@@ -9,7 +10,7 @@ namespace ProgramsTxtMaker
 	public partial class Form1 : Form
     {
 
-
+        bool CacheDirectories = true;
         //[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         //private static extern int GetShortPathName(String pathName, StringBuilder shortName, int cbShortName);
 
@@ -18,7 +19,7 @@ namespace ProgramsTxtMaker
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog()==DialogResult.OK)
             {
@@ -87,7 +88,7 @@ namespace ProgramsTxtMaker
             } catch { return false; }
         }
 
-        private int AddFiles(string ext, string stack, StreamWriter writer, StreamWriter psf, string tbone, int sn)
+        private int AddFiles(string ext, string stack, StreamWriter writer, StreamWriter psf, string tbone, int sn, bool cachedir = false)
         {
             int dn = 0;
             int fsn = 0;
@@ -96,6 +97,29 @@ namespace ProgramsTxtMaker
             string cdromdir;
             string g;
             Dictionary<string, int> dirsizes = new();
+
+            if (cachedir)
+            {
+                foreach (string d in Directory.EnumerateDirectories(tbone, "*", SearchOption.AllDirectories))
+                {
+                    try
+                    {
+                        dirsizes.Add(d, Directory.EnumerateFileSystemEntries(d).Count());
+                    }
+                    catch (Exception e)
+                    {
+                        this.Text = "Directory " + d + " Exception " + e.Message;
+					}
+                }
+                try
+                {
+                    dirsizes.Add(Path.GetFullPath(tbone), Directory.EnumerateFileSystemEntries(tbone).Count());
+                }
+                catch (Exception e)
+                {
+					this.Text = "Root directory " + Path.GetFullPath(tbone) + " Exception " + e.Message;
+				}
+            }
 
             foreach (string f in Directory.GetFiles(tbone, "*" + ext, SearchOption.AllDirectories).OrderBy(x => x))
             {
@@ -175,7 +199,7 @@ namespace ProgramsTxtMaker
             return sn;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             textBox3.Clear();
             textBox2.Text = "START\r\n";
@@ -216,11 +240,18 @@ namespace ProgramsTxtMaker
 
                 }
             }
-            sn = AddFiles(".EXE", "\" \"801FFFF0\"", writer, psf, tbone, sn);
+            sn = AddFiles(".EXE", "\" \"801FFFF0\"", writer, psf, tbone, sn, CacheDirectories);
             if (checkBox4.Checked)
             {
-                sn = AddFiles(".VFS", "\" \"FFFFFFFE\"", null, psf, tbone, sn);
-            }
+                sn = AddFiles(".VFS", "\" \"FFFFFFFE\"", null, psf, tbone, sn, CacheDirectories);
+				sn = AddFiles(".STR", "\" \"FFFFFF0A\"", null, psf, tbone, sn, CacheDirectories);
+				sn = AddFiles(".BS1", "\" \"FFFFFF0B\"", null, psf, tbone, sn, CacheDirectories);
+				sn = AddFiles(".BS2", "\" \"FFFFFF0C\"", null, psf, tbone, sn, CacheDirectories);
+				sn = AddFiles(".XA", "\" \"FFFFFF06\"", null, psf, tbone, sn, CacheDirectories);
+				sn = AddFiles(".XA1", "\" \"FFFFFF0D\"", null, psf, tbone, sn, CacheDirectories);
+				sn = AddFiles(".XA2", "\" \"FFFFFF0E\"", null, psf, tbone, sn, CacheDirectories);
+				sn = AddFiles(".CNF", "\" \"FFFFFF16\"", null, psf, tbone, sn, CacheDirectories);
+			}
             
             textBox2.Text += "\"END\"";
             writer.Write("\"END\"");
@@ -228,13 +259,15 @@ namespace ProgramsTxtMaker
             writer.Close();
             psf.Flush();
             psf.BaseStream.WriteByte(0x80);
+            psf.Flush();
             psf.Close();
             textBox3.Text += '€';
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void Label1_Click(object sender, EventArgs e)
         {
             this.BackgroundImageLayout = ImageLayout.Center;
+            CacheDirectories = !CacheDirectories;
             //MessageBox.Show(textBox1.Text, IsoName(textBox1.Text).ToString());
         }
 
@@ -262,7 +295,7 @@ namespace ProgramsTxtMaker
             textBox3.Visible = !textBox3.Visible;
         }
 
-        private void label2_Click(object sender, EventArgs e)
+        private void Label2_Click(object sender, EventArgs e)
         {
             this.BackgroundImageLayout = ImageLayout.Stretch;
         }
