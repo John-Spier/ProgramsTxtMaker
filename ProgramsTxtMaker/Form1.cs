@@ -33,7 +33,7 @@ namespace ProgramsTxtMaker
             try
             {
                 string oldfn = Path.GetFileNameWithoutExtension(filename).Replace('_', 'A');
-                string oldext = Path.GetExtension(filename).Substring(1);
+                string oldext = Path.GetExtension(filename)[1..];
                 if (!filename.All(char.IsAscii))
                 {
                     return false;
@@ -92,11 +92,10 @@ namespace ProgramsTxtMaker
         {
             int dn = 0;
             int fsn = 0;
-            int dir;
-            string oldfn;
-            string cdromdir;
+			string oldfn;
+			string cdromdir;
             string g;
-            Dictionary<string, int> dirsizes = new();
+            Dictionary<string, int> dirsizes = [];
 
             if (cachedir)
             {
@@ -123,7 +122,7 @@ namespace ProgramsTxtMaker
 
             foreach (string f in Directory.GetFiles(tbone, "*" + ext, SearchOption.AllDirectories).OrderBy(x => x))
             {
-                if (!dirsizes.TryGetValue(Path.GetDirectoryName(f), out dir))
+                if (!dirsizes.TryGetValue(Path.GetDirectoryName(f), out int dir))
                 {
                     if (dirsizes.TryAdd(Path.GetDirectoryName(f), Directory.EnumerateFileSystemEntries(Path.GetDirectoryName(f)).Count()))
                     {
@@ -182,13 +181,13 @@ namespace ProgramsTxtMaker
                     //MessageBox.Show(cdromdir);
                     if (writer != null)
                     {
-                        textBox2.Text += '"' + oldfn.Substring(0, Math.Min(23, oldfn.Length)) + "\"cdrom:" + cdromdir + ";1\"\r\n";
-                        writer.WriteLine('"' + oldfn.Substring(0, Math.Min(23, oldfn.Length)) + "\"cdrom:" + cdromdir + ";1\"");
+                        textBox2.Text += $"\"{oldfn[..Math.Min(23, oldfn.Length)]}\"cdrom:{cdromdir};1\"\r\n";
+                        writer.WriteLine('"' + oldfn[..Math.Min(23, oldfn.Length)] + "\"cdrom:" + cdromdir + ";1\"");
                     }
                     if (psf != null)
                     {
-                        textBox3.Text += '"' + oldfn.Substring(0, Math.Min(63, oldfn.Length)) + "\" \"" + cdromdir + stack + "\r\n";
-                        psf.WriteLine('"' + oldfn.Substring(0, Math.Min(63, oldfn.Length)) + "\" \"" + cdromdir + stack);
+                        textBox3.Text += $"\"{oldfn[..Math.Min(63, oldfn.Length)]}\" \"{cdromdir}{stack}\r\n";
+                        psf.WriteLine('"' + oldfn[..Math.Min(63, oldfn.Length)] + "\" \"" + cdromdir + stack);
                     }
                 }
                 catch (Exception fx)
