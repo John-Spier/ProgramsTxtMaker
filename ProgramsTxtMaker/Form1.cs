@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Text;
 using System.Windows.Forms;
 
 namespace ProgramsTxtMaker
@@ -11,13 +11,17 @@ namespace ProgramsTxtMaker
     {
 
         bool CacheDirectories = true;
+        Encoding encoding = Encoding.ASCII;
+        bool sjis = false;
         //[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         //private static extern int GetShortPathName(String pathName, StringBuilder shortName, int cbShortName);
 
         public Form1()
         {
             InitializeComponent();
-        }
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            //encoding = Encoding.GetEncoding(932);
+		}
 
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -216,8 +220,8 @@ namespace ProgramsTxtMaker
                 
             }
             */
-            StreamWriter writer = File.CreateText(progfile);
-            StreamWriter psf = File.CreateText(tbone + Path.DirectorySeparatorChar + "TITLES.TXT");
+            StreamWriter writer = new(progfile, false, encoding);//File.CreateText(progfile);
+            StreamWriter psf = new(tbone + Path.DirectorySeparatorChar + "TITLES.TXT", false, encoding);//File.CreateText(tbone + Path.DirectorySeparatorChar + "TITLES.TXT");
             writer.WriteLine("START");
             if (checkBox2.Checked)
             {
@@ -256,10 +260,12 @@ namespace ProgramsTxtMaker
             writer.Write("\"END\"");
             writer.Flush();
             writer.Close();
+            writer.Dispose();
             psf.Flush();
             psf.BaseStream.WriteByte(0x80);
             psf.Flush();
             psf.Close();
+            psf.Dispose();
             textBox3.Text += '€';
         }
 
@@ -297,6 +303,16 @@ namespace ProgramsTxtMaker
         private void Label2_Click(object sender, EventArgs e)
         {
             this.BackgroundImageLayout = ImageLayout.Stretch;
+            if (sjis)
+            {
+                encoding = Encoding.ASCII;
+                sjis = false;
+            }
+            else
+            {
+                encoding = Encoding.GetEncoding(932);
+                sjis = true;
+            }
         }
 
 
