@@ -20,8 +20,9 @@ namespace ProgramsTxtMaker
         {
             InitializeComponent();
 			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            //encoding = Encoding.GetEncoding(932);
-		}
+            encoding = Encoding.GetEncoding(932);
+            sjis = true;
+        }
 
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -99,7 +100,9 @@ namespace ProgramsTxtMaker
 			string oldfn;
 			string cdromdir;
             string g;
+            int loserbytes, psfbytes;
             Dictionary<string, int> dirsizes = [];
+            Dictionary<string, bool> xmlfix = [];
 
             if (cachedir)
             {
@@ -108,6 +111,7 @@ namespace ProgramsTxtMaker
                     try
                     {
                         dirsizes.Add(d, Directory.EnumerateFileSystemEntries(d).Count());
+                        xmlfix.Add(d, false);
                     }
                     catch (Exception e)
                     {
@@ -143,6 +147,26 @@ namespace ProgramsTxtMaker
                     oldfn = Path.GetFileNameWithoutExtension(f);
                     if (checkBox3.Checked && dir > numericUpDown3.Value)
                     {
+                        if (xmlfix.TryGetValue(Path.GetDirectoryName(f), out bool fix))
+                        {
+                            if (!fix)
+                            {
+                                dn++;
+                                xmlfix[Path.GetDirectoryName(f)] = true;
+                                sn = 1;
+                            }
+                        }
+                        else
+                        {
+                            if (xmlfix.TryAdd(Path.GetDirectoryName(f), true))
+                            {
+                                dn++;
+                            }
+                            else
+                            {
+                                this.Text = "Could not de-duplicate directory names for " + Path.GetDirectoryName(f);
+                            }
+                        }
                         if (sn % ((int)numericUpDown3.Value) == 0)
                         {
                             dn++;
@@ -183,15 +207,17 @@ namespace ProgramsTxtMaker
                     cdromdir = g[Path.GetFullPath(tbone).Length..].ToUpperInvariant();
                     //MessageBox.Show('"' + oldfn.Substring(0, Math.Min(23, oldfn.Length)) + "\"cdrom:" + cdromdir + ";1\"");
                     //MessageBox.Show(cdromdir);
+                    encoding.GetEncoder().Convert(oldfn.ToCharArray(), 0, oldfn.Length, new byte[64], 0, 63, true, out psfbytes, out int _, out bool _);
+                    encoding.GetEncoder().Convert(oldfn.ToCharArray(), 0, oldfn.Length, new byte[24], 0, 23, true, out loserbytes, out int _, out bool _);
                     if (writer != null)
                     {
-                        textBox2.Text += $"\"{oldfn[..Math.Min(23, oldfn.Length)]}\"cdrom:{cdromdir};1\"\r\n";
-                        writer.WriteLine('"' + oldfn[..Math.Min(23, oldfn.Length)] + "\"cdrom:" + cdromdir + ";1\"");
+                        textBox2.Text += $"\"{oldfn[..Math.Min(loserbytes, oldfn.Length)]}\"cdrom:{cdromdir};1\"\r\n";
+                        writer.WriteLine('"' + oldfn[..Math.Min(loserbytes, oldfn.Length)] + "\"cdrom:" + cdromdir + ";1\"");
                     }
                     if (psf != null)
                     {
-                        textBox3.Text += $"\"{oldfn[..Math.Min(63, oldfn.Length)]}\" \"{cdromdir}{stack}\r\n";
-                        psf.WriteLine('"' + oldfn[..Math.Min(63, oldfn.Length)] + "\" \"" + cdromdir + stack);
+                        textBox3.Text += $"\"{oldfn[..Math.Min(psfbytes, oldfn.Length)]}\" \"{cdromdir}{stack}\r\n";
+                        psf.WriteLine('"' + oldfn[..Math.Min(psfbytes, oldfn.Length)] + "\" \"" + cdromdir + stack);
                     }
                 }
                 catch (Exception fx)
@@ -305,11 +331,13 @@ namespace ProgramsTxtMaker
             this.BackgroundImageLayout = ImageLayout.Stretch;
             if (sjis)
             {
+                this.Text = "PS1 Automatic EXE Menu Maker - Using ASCII Encoding";
                 encoding = Encoding.ASCII;
                 sjis = false;
             }
             else
             {
+                this.Text = "PS1 Automatic EXE Menu Maker - Using Shift-JIS Encoding";
                 encoding = Encoding.GetEncoding(932);
                 sjis = true;
             }
