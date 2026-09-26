@@ -280,7 +280,12 @@ namespace ProgramsTxtMaker
 				sn = AddFiles(".XA1", "\" \"FFFFFF0D\"", null, psf, tbone, sn, CacheDirectories);
 				sn = AddFiles(".XA2", "\" \"FFFFFF0E\"", null, psf, tbone, sn, CacheDirectories);
 				sn = AddFiles(".CNF", "\" \"FFFFFF16\"", null, psf, tbone, sn, CacheDirectories);
-			}
+                sn = AddFiles(".VGI", "\" \"FFFFFF27\"", null, psf, tbone, sn, CacheDirectories);
+                sn = AddFiles(".SRT", "\" \"FFFFFF28\"", null, psf, tbone, sn, CacheDirectories);
+                sn = AddFiles(".HIT", "\" \"FFFFFF01\"", null, psf, tbone, sn, CacheDirectories);
+                sn = AddFiles(".PXM", "\" \"FFFFFF02\"", null, psf, tbone, sn, CacheDirectories);
+                sn = AddFiles(".MP3", "\" \"FFFFFF2B\"", null, psf, tbone, sn, CacheDirectories);
+            }
             
             textBox2.Text += "\"END\"";
             writer.Write("\"END\"");
